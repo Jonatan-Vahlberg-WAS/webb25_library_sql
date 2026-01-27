@@ -50,4 +50,26 @@ const Book = sequelize.define(
 Author.hasMany(Book, { foreignKey: "author_id" });
 Book.belongsTo(Author, { foreignKey: "author_id" });
 
-module.exports = { Author, Book };
+// Modell för Student
+const Student = sequelize.define(
+  "student",
+  {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isEmail: true,
+      },
+    },
+  },
+  {
+    timestamps: false, // Stäng av createdAt och updatedAt
+    freezeTableName: true, // Använd "student" som tabellnamn
+  }
+);
+
+module.exports = { Author, Book, Student };
