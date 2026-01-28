@@ -1,0 +1,16 @@
+/node_modules
+/LICENSE
+/CONTRIBUTING.md
+/CONTRIBUTING.md
+
+# Mac specific
+.DS_Store
+
+# Windows specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux specific
+.directory
+.Trash-1000
