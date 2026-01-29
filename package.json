@@ -2,20 +2,26 @@
   "name": "node_sql",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "start:ze": "node server_sequelize.js",
-    "dev": "nodemon server.js",
-    "dev:ze": "nodemon server_sequelize.js"
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jonatan-Vahlberg-WAS/webb25_library_sql.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jonatan-Vahlberg-WAS/webb25_library_sql/issues"
+  },
+  "homepage": "https://github.com/Jonatan-Vahlberg-WAS/webb25_library_sql#readme",
   "dependencies": {
     "express": "^5.2.1",
-    "pg": "^8.17.2",
-    "sequelize": "^6.37.7"
+    "pg": "^8.17.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"

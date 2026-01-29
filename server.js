@@ -1,69 +1,76 @@
-const express = require('express');
-const app = express();
-const port = 3000;
+const Express = require('express')
+const pg = require('pg')
+const authorQueries = require('./sql/authorQueries')
+const bookQueries = require('./sql/bookQueries')
 
-const pg = require('pg');
 const pool = new pg.Pool({
     user: 'postgres',
     host: 'localhost',
-    database: 'library_v5',
+    database: 'library_v6',
     password: 'postgres',
     port: 5432,
-});
+})
 
-app.use(express.json());
-
-pool.query('SELECT NOW()', (err, result) => {
-    if (err) {
-        return console.error('Error executing query', err.stack);
+pool.query("SELECT NOW()", (err, result) => {
+    if(err) {
+        return console.error("Error connecting to server:", err.stack)
     }
-    console.log(result.rows);
-});
 
-app.get('/', (req, res) => {
-    res.send('Welcome to the API');
-});
+    console.log(result.rows)
+})
 
-app.get("/api/authors", async (req, res) => {
+const PORT = 3000;
+const app = Express();
+
+app.get("/home/", (req, res) => {
+    return res.json({
+        message: "Hello world" 
+    })
+})
+
+app.get("/api/authors/", async (req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM author");
-        res.json(result.rows);
-    } catch (err) {
-        console.error("Fel vid hämtning av författare:", err);
-        res.status(500).send("Ett fel uppstod.");
-    }
-});
+        const authors = await pool.query(authorQueries.getAllAuthors)
 
-app.post("/api/authors", async (req, res) => {
-    const { name, year_of_birth } = req.body;
-  
+        return res.json(authors.rows)
+    } catch (err) {
+        console.error("Cannot fetch users: ", err)
+        return res.status(500).json({
+            message: "Cannot fetch users"
+        })
+    }
+})
+
+app.get("/api/authors/:id", async (req, res) => {
+    const { id } = req.params;
     try {
-      const result = await pool.query(
-        "INSERT INTO author (name, year_of_birth) VALUES ($1, $2) RETURNING id",
-        [name, year_of_birth]
-      );
-  
-      res.json({
-        message: "Författaren lades till",
-        author_id: result.rows[0].id,
-      });
+        const authorResponse = await pool.query(authorQueries.getAuthor,[id])
+        if(authorResponse.rowCount === 0) {
+            return res.status(404).json({
+                message: "Author does not exist"
+            })
+        }
+        const author = authorResponse.rows[0]
+        return res.json(author)
     } catch (err) {
-      console.error("Fel vid tillägg av författare:", err);
-      res.status(500).send("Ett fel uppstod vid tillägg av författare.");
+        console.error("Cannot fetch users: ", err)
+        return res.status(500).json({
+            message: "Cannot fetch user"
+        })
     }
-  });
+})
 
-app.get("/api/books", async (req, res) => {
-    try {
-        const result = await pool.query("SELECT * FROM book");
-        res.json(result.rows);
-    } catch (err) {
-        console.error("Fel vid hämtning av böcker:", err);
-        res.status(500).send("Ett fel uppstod.");
-    }
-});
+app.listen(PORT, () => {
+    console.log("App listening on port: ", PORT)
+})
 
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+// const pg = require("pg");
+
+// const pool = new pg.Pool({
+//   user: "din-användare", // PostgreSQL-användare
+//   host: "localhost",     // Värden där databasen körs
+//   database: "library",   // Namn på din databas
+//   password: "ditt-lösenord", // Ditt lösenord för databasen
+//   port: 5432,            // Standardport för PostgreSQL
+// });
