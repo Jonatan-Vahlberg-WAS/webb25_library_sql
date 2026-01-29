@@ -1,7 +1,7 @@
 const Express = require('express')
 const pg = require('pg')
-const authorQueries = require('./sql/authorQueries')
-const bookQueries = require('./sql/bookQueries')
+
+const queries = require('./sql/queries')
 
 const pool = new pg.Pool({
     user: 'postgres',
@@ -30,7 +30,7 @@ app.get("/home/", (req, res) => {
 
 app.get("/api/authors/", async (req, res) => {
     try {
-        const authors = await pool.query(authorQueries.getAllAuthors)
+        const authors = await pool.query(queries.authors.getAllAuthors)
 
         return res.json(authors.rows)
     } catch (err) {
@@ -44,7 +44,7 @@ app.get("/api/authors/", async (req, res) => {
 app.get("/api/authors/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        const authorResponse = await pool.query(authorQueries.getAuthor,[id])
+        const authorResponse = await pool.query(queries.authors.getAuthor,[id])
         if(authorResponse.rowCount === 0) {
             return res.status(404).json({
                 message: "Author does not exist"
@@ -63,14 +63,3 @@ app.get("/api/authors/:id", async (req, res) => {
 app.listen(PORT, () => {
     console.log("App listening on port: ", PORT)
 })
-
-
-// const pg = require("pg");
-
-// const pool = new pg.Pool({
-//   user: "din-användare", // PostgreSQL-användare
-//   host: "localhost",     // Värden där databasen körs
-//   database: "library",   // Namn på din databas
-//   password: "ditt-lösenord", // Ditt lösenord för databasen
-//   port: 5432,            // Standardport för PostgreSQL
-// });
