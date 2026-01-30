@@ -1,7 +1,7 @@
 
 const bookQueries = {
     getBooks: "SELECT * FROM BOOK;",
-    getBooksWithSearch: "SELECT * FROM BOOK WHERE name ILIKE $1",
+    getBooksWithSearch: (query) => `SELECT * FROM BOOK WHERE name ILIKE '%${query}%'`,
     getBooksWithAuthor: `SELECT 
         b.id,
         b.name,

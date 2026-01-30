@@ -90,8 +90,7 @@ app.get("/api/books/search", async (req, res) => {
     if(q && q.length >= 3) {
         console.log("Q is valid")
         const filteredBooks = await pool.query(
-            "SELECT * FROM book WHERE name ILIKE $1",
-            [`%${q}%`]
+            queries.books.getBooksWithSearch(q)
         );
         return res.json(filteredBooks.rows)
     }
