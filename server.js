@@ -86,7 +86,7 @@ app.get("/api/books/search", async (req, res) => {
             return res.status(400).json({ message: "Sökparameter 'q' krävs" });
         }
         const result = await pool.query(
-            `SELECT * FROM book WHERE name ILIKE `'%${q}%'``
+            `SELECT * FROM book WHERE name ILIKE '%${q}%'`
         );
         if (result.rows.length === 0) {
             return res.status(404).json({ message: "Inga böcker hittades" });
